@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <script>
+    $(document).ready(function () {
+      let obj = [
+        { "area": "서울" },
+        { "area": "부산" },
+        { "area": "전주" }
+      ];
+
+      //each() -> 배열에 대해 순환
+      let ulTag = $('<ul/>'); // 새로 ul을 만들고
+      $(obj).each(function (idx, obj) { // 매개변수가 같은 순서, 같은 방식으로 온다
+        console.log(idx + " : ", obj);
+        let liTag = $('<li/>').text(obj.area); // 새로 li를 만들면서 그 안에 obj안에 있는 area를 넣고
+        ulTag.append(liTag); // 새로만든 ulTag에 append한다
+      });
+      $('#ex01').append(ulTag); // 기존에 만든 ex01에 ulTag를 append한다
+
+      console.log("= = = = = = = = = = = = = = = = = = = = =")
+      $.each(obj, function (idx, obj) {
+        console.log(idx + " : ", obj);
+      });
+
+      console.log("= = = = = = = = = = = = = = = = = = = = =")
+      $('#menu1 li').each(function (idx, obj) {
+        console.log(idx + " : ", $(obj).text()); // jquery 아래랑 동일한 값이다.
+        console.log(idx + " : ", obj.textContent); // 자바스크립트처럼 쓸수있다
+      });
+
+      //위랑 문법적으로만 다르지 같다 .
+      console.log("= = = = = = = = = = = = = = = = = = = = =")
+      $.each($('#menu2 li'), function (idx, obj) { // 리턴되는 값이 들어가서 그다음에 실행된다. jquery도 결국엔 함수도 배열이고 each가 돈다
+        console.log(idx + " : ", $(obj).text());
+        console.log(idx + " : ", obj.textContent);
+      });
+
+      console.log("= = = = = = = = = = = = = = = = = = = = =")
+      $('#ex01 li').each(function (idx) {
+        console.log(idx + " : ", $(this).text()); // this를 이용해서 태그를 받아올수도 있다. this가 실행될때 해당되는 요소를 가져온다.
+      });
+    });
+  </script>
+  <div id="ex01">
+    <h1>배열 메소드</h1>
+    <ul id="menu1">
+      <li>내용1-1</li>
+      <li>내용1-2</li>
+      <li>내용1-3</li>
+    </ul>
+    <ul id="menu2">
+      <li>내용2-1</li>
+      <li>내용2-2</li>
+      <li>내용2-3</li>
+    </ul>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      let arr1 = [
+        { "area": "서울", "dept": "영업", "name": "무대리" },
+        { "area": "부산", "dept": "영업", "name": "홍과장" },
+        { "area": "대전", "dept": "생산", "name": "박사장" },
+        { "area": "서울", "dept": "생산", "name": "김부장" }
+      ];
+
+
+      //$.map()
+      let arr2 = $.map(arr1, function (obj, idx) { //각각의 매개변수가 다르게 오기 때문에 ..
+        console.log(obj, idx);
+        if (obj.area == "서울") { //obj안에 있는 area에서 서울만 리턴한다
+          return obj;
+        }
+      });
+      $(arr2).each(function (idx, obj) {
+        console.log(idx + " : ", obj);
+      });
+
+      console.log("= = = = = = = = = = = = = = = = = = = = =")
+      //$.grep() -> 오름차순 정렬
+      let arr3 = $.grep(arr1, function (obj, idx) {
+        if (obj.dept == "영업") {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      $(arr3).each(function (idx, obj) {
+        console.log(idx + " : ", obj)
+      });
+
+
+
+    //예제
+    console.log("= = = = = = = = = = = = = = = = = = = = =")
+    function appendTag(tag, datas){
+      $(datas).each(function(idx, obj){
+        $(tag).append($('<li/>').text("지역 : " + obj.area + ", 부서 : " + obj.dept + ", 이름 : " + obj.name));
+      });
+    }
+
+    let areaDatas = $.map(arr1, function(obj, idx){
+      if(obj.area == "서울") {
+        //객체에 데이터 추가 혹은 삭제
+        return obj;
+      }
+    });
+    let ulTag = $('#ex02 ul:first');
+    appendTag(ulTag, areaDatas);
+
+
+    let deptDatas = $.map(arr1, function(obj, idx){
+      if(obj.dept == "영업"){
+          return obj;
+      }
+    });
+    ulTag = $(ulTag).next();
+    appendTag(ulTag, deptDatas);
+    
+
+    deptDatas = $.map(arr1, function(obj, idx){
+      if(obj.dept == "생산")
+        return obj;
+    });
+    ulTag = $(ulTag).next();
+    appendTag(ulTag, deptDatas);
+
+    
+    console.log("제이쿼리 + 자바스크립트");
+    $.map(arr1, function(obj, idx){
+      if(obj.dept == "영업")
+      return obj;
+    }).forEach(function(el, idx){
+      console.log(idx + " : ", el)
+    })
+  });
+    </script>
+
+
+<div id="ex02">
+  <!--근무 : 서울-->
+    <ul></ul>
+  <!-- : 서울-->
+    <ul></ul>
+  <!--근무 : 서울-->
+    <ul></ul>
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      console.log("= = = = = = = = = = = = = = = = = = = = = ex03")
+      let arr1 = [
+        "서울", "대전", "부산", "전주"
+      ];
+
+      let arr2 = [
+        "한국", "미국", "일본", "중국"
+      ];
+
+      let obj = {"name" : "정부장", "area" : "서울"};
+
+      let arr3 = [
+        {"name" : "김대리" , "area" : "대전"},
+        {"name" : "이사원" , "area" : "부산"},
+        {"name" : "하부장" , "area" : "전주"},
+        {"name" : "유전무" , "area" : "서울"}
+      ]
+
+      //inArray() -> 배열 안에 데이터가 있다면 인덱스, 없다면 -1
+      if($.inArray("부산", arr1) != -1){
+        console.log("해당 데이터가 존재합니다")
+      }
+
+      console.log("= = = = = = = = = = = = = = = = = = = = =")
+      //isArray() -> 매개변수가 배열인지 여부를 확인
+      console.log("arr의 배열여부 : ", $.isArray(arr2)); // 결과값 true
+      console.log("obj의 배열여부 : ", $.isArray(obj)); // 결과값 false
+
+      console.log("= = = = = = = = = = = = = = = = = = = = =")
+      //merge() -> 두개의 배열을 하나의 배열로 반환
+      // $($.merge(arr2, arr1)).each(function(idx, obj){ // 배열 메소드는 반환되는게 자바스크립트의 타입들이다. 그렇기때문에 jquery로 감싸주지 않는 이상 jquery로 호출할수가 없다 그래서 두번 감싸는건가
+      //   console.log(idx + " : ", obj)
+      // })
+
+
+      // 예제
+      $(arr1).each(function(idx, obj){
+        $('#ex03 div:contains("도시")').append(
+          $('<p/>').text(obj)
+          );
+      })
+
+      $(arr2).each(function(idx, obj){
+        $('#ex03 div:contains("국가")').append(
+          $('<p/>').text(obj)
+          );
+      });
+
+      // $('#ex03 p:contains("한국")').append( //한국에 이름이 들어간다
+      //   $('<p/>').text("이름 : " + obj.name)
+      // );
+
+      //  $('#ex03 div:first > p:contains('+obj.area+')').append( //뭔지 기억 안남
+      //    $('<p/>').text("이름 : " + obj.name)
+      //  );
+
+      $(arr3).each(function(idx, obj){ //해당하는 지역에 해당되는 이름이 들어간다
+        $('#ex03 div:first > p:contains('+obj.area+')').append( // 문장이라는 특성에 문자열을 합쳐서 사용가능하다.
+          $('<p/>').text("이름 : " + obj.name)
+          );
+      });
+
+    });
+  </script>
+
+  <div id="ex03">
+    <div>
+      <h3>대한민국 도시</h3>
+    </div>
+    <div>
+      <h3>국가</h3>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      //index() -> 검색조건에 해당하는 요소의 인덱스 값을 가져온다
+      let index = $('#ex04 li').index($('#list3')); // id가 ex04안에 있는 li안에서 찾아 list3을 반환한다 ?
+      let tag = $('#ex04 li').eq(index); // 제대로 가지고왔는지 확인하려면
+      console.log($(tag).text());
+    })
+  </script>
+
+  <div id="ex04">
+    <ul>
+      <li>내용1</li>
+      <li>내용2</li>
+      <li id="list3">내용3</li>
+      <li>내용4</li>
+    </ul>
+  </div>
+</body>
+
+</html>
